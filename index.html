@@ -354,10 +354,13 @@
   }
 
   .article-body a {
-    pointer-events: none;
-    color: inherit;
+    color: #326891;
     text-decoration: none;
-    cursor: default;
+    cursor: pointer;
+  }
+
+  .article-body a:hover {
+    text-decoration: underline;
   }
 
   .article-body img {
@@ -790,13 +793,23 @@
       img.removeAttribute("height");
     });
 
-    // Replace <a> tags with <span> to disable navigation
+    // Fix links: convert relative wiki links to full URLs opening in new tabs
     doc.querySelectorAll("a").forEach(a => {
-      const span = doc.createElement("span");
-      span.innerHTML = a.innerHTML;
-      // Copy class if any
-      if (a.className) span.className = a.className;
-      a.replaceWith(span);
+      const href = a.getAttribute("href") || "";
+      if (href.startsWith("/wiki/")) {
+        a.setAttribute("href", "https://en.wikipedia.org" + href);
+        a.setAttribute("target", "_blank");
+        a.setAttribute("rel", "noopener");
+      } else if (href.startsWith("http")) {
+        a.setAttribute("target", "_blank");
+        a.setAttribute("rel", "noopener");
+      } else {
+        // Remove non-content links (anchors, javascript:, etc.)
+        const span = doc.createElement("span");
+        span.innerHTML = a.innerHTML;
+        if (a.className) span.className = a.className;
+        a.replaceWith(span);
+      }
     });
 
     // Remove float positioning from thumbnails
