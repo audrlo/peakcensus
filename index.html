@@ -115,19 +115,11 @@
   }
 
 
-  .inset-label {
-    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
-    font-size: 9px;
-    fill: #999;
-    font-weight: 600;
-    letter-spacing: 0.8px;
-  }
-
   .county {
     stroke: rgba(255,255,255,0.4);
     stroke-width: 0.25;
     cursor: pointer;
-    transition: stroke 0.08s, stroke-width 0.08s;
+    will-change: stroke, stroke-width;
   }
 
   .county:hover {
@@ -444,11 +436,6 @@
     .datum(stateBorders)
     .attr("class", "state-border")
     .attr("d", usPath);
-
-
-  // Disable all zoom/scroll/drag on the map
-  svg.on("wheel", e => e.preventDefault())
-     .on("dblclick.zoom", null);
 
   // Tooltip
   const tooltip = document.getElementById("tooltip");
