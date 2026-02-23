@@ -265,10 +265,220 @@
 
   #wiki-close:hover { border-color: #999; color: #121212; }
 
-  #wiki-iframe {
+  #wiki-content {
     flex: 1;
-    border: none;
+    overflow-y: auto;
+    padding: 28px 28px 40px;
     background: #fff;
+  }
+
+  #wiki-content.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #999;
+  }
+
+  .article-headline {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: #121212;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .article-subtitle {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #555;
+  }
+
+  .article-rule {
+    border: none;
+    border-top: 1px solid #e5e5e5;
+    margin: 14px 0;
+  }
+
+  .article-meta {
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .article-meta strong {
+    color: #333;
+    font-weight: 600;
+  }
+
+  .article-body p {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  .article-body h2 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #121212;
+    margin: 32px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .article-body h3 {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #222;
+    margin: 24px 0 8px;
+  }
+
+  .article-body h4 {
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #555;
+    margin: 20px 0 8px;
+  }
+
+  .article-body a {
+    pointer-events: none;
+    color: inherit;
+    text-decoration: none;
+    cursor: default;
+  }
+
+  .article-body img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 12px auto;
+  }
+
+  .article-body figcaption,
+  .article-body .thumbcaption {
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-style: italic;
+    color: #777;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .article-body .infobox {
+    float: none !important;
+    width: 100% !important;
+    margin: 0 0 24px 0 !important;
+    border: 1px solid #e5e5e5;
+    border-collapse: collapse;
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+  }
+
+  .article-body .infobox td,
+  .article-body .infobox th {
+    padding: 6px 10px;
+    border: 1px solid #eee;
+    vertical-align: top;
+  }
+
+  .article-body .infobox th {
+    background: #f9f9f7;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .article-body table:not(.infobox) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+  }
+
+  .article-body table:not(.infobox) td,
+  .article-body table:not(.infobox) th {
+    padding: 6px 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+  }
+
+  .article-body table:not(.infobox) th {
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+  }
+
+  .article-body .thumb {
+    float: none !important;
+    margin: 16px 0 !important;
+    width: auto !important;
+  }
+
+  .article-body .thumbinner {
+    width: auto !important;
+    max-width: 100%;
+  }
+
+  .article-body ul, .article-body ol {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #333;
+    margin: 0 0 16px 24px;
+  }
+
+  .article-body .mw-editsection,
+  .article-body .navbox,
+  .article-body .noprint,
+  .article-body .ambox,
+  .article-body .hatnote,
+  .article-body .metadata,
+  .article-body .reference,
+  .article-body .mw-references-wrap,
+  .article-body sup.reference,
+  .article-body style,
+  .article-body link,
+  .article-body .catlinks,
+  .article-body .sistersitebox,
+  .article-body .mw-empty-elt,
+  .article-body .authority-control,
+  .article-body .portal,
+  .article-body .shortdescription,
+  .article-body .mw-parser-output > .mw-heading ~ .mw-heading + style,
+  .article-body .wikitable.mw-collapsible {
+    display: none !important;
+  }
+
+  .wiki-attribution {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e5e5;
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #999;
+  }
+
+  .wiki-attribution a {
+    pointer-events: auto !important;
+    color: #2171b5;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .wiki-attribution a:hover {
+    text-decoration: underline;
   }
 
   /* ── Loading ── */
@@ -316,7 +526,7 @@
       <span id="wiki-title"></span>
       <button id="wiki-close" aria-label="Close">&times;</button>
     </div>
-    <iframe id="wiki-iframe" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+    <div id="wiki-content"></div>
   </div>
 </div>
 
@@ -473,26 +683,193 @@
   // Wiki panel
   const wikiPanel = document.getElementById("wiki-panel");
   const wikiTitle = document.getElementById("wiki-title");
-  const wikiIframe = document.getElementById("wiki-iframe");
+  const wikiContent = document.getElementById("wiki-content");
   const wikiClose = document.getElementById("wiki-close");
+  let currentAbort = null;
 
-  function onClick(event, d) {
-    const info = peaks[d.id];
-    if (!info) return;
-    wikiTitle.textContent = info.fullName;
-    wikiIframe.src = info.wikiUrl;
-    wikiPanel.classList.add("open");
+  function extractTitleFromUrl(wikiUrl) {
+    try {
+      const url = new URL(wikiUrl);
+      return url.pathname.split("/wiki/")[1] || "";
+    } catch {
+      return wikiUrl.split("/wiki/")[1] || "";
+    }
   }
 
-  wikiClose.addEventListener("click", () => {
+  async function fetchWikiContent(wikiUrl, signal) {
+    const title = extractTitleFromUrl(wikiUrl);
+    const apiUrl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(title)}&format=json&prop=text&origin=*`;
+    const resp = await fetch(apiUrl, { signal });
+    const data = await resp.json();
+    if (data.parse && data.parse.text) {
+      return data.parse.text["*"];
+    }
+    throw new Error("No content returned");
+  }
+
+  function cleanWikiHtml(rawHtml) {
+    const doc = new DOMParser().parseFromString(rawHtml, "text/html");
+
+    // Remove Wikipedia UI elements
+    const removeSelectors = [
+      ".mw-editsection", ".navbox", ".noprint", ".ambox", ".hatnote",
+      ".metadata", ".reference", ".mw-references-wrap", "sup.reference",
+      "style", "link", ".catlinks", ".sistersitebox", ".mw-empty-elt",
+      ".authority-control", ".portal", ".shortdescription",
+      ".wikitable.mw-collapsible", ".mw-heading-toggler",
+      ".mw-ext-cite-error", ".reflist", ".refbegin"
+    ];
+    removeSelectors.forEach(sel => {
+      doc.querySelectorAll(sel).forEach(el => el.remove());
+    });
+
+    // Remove "See also", "References", "External links", "Notes", "Further reading" sections
+    const sectionHeadings = ["See_also", "References", "External_links", "Notes", "Further_reading", "Bibliography"];
+    doc.querySelectorAll("h2, h3").forEach(heading => {
+      const headingId = heading.querySelector("[id]");
+      const id = headingId ? headingId.id : heading.id || "";
+      if (sectionHeadings.some(s => id === s || id.replace(/_/g, " ") === s.replace(/_/g, " "))) {
+        // Remove heading and all siblings until next heading of same or higher level
+        let el = heading.nextElementSibling;
+        const level = heading.tagName;
+        while (el) {
+          const next = el.nextElementSibling;
+          if (el.tagName === level || (level === "H3" && el.tagName === "H2")) break;
+          el.remove();
+          el = next;
+        }
+        heading.remove();
+      }
+    });
+
+    // Also remove mw-heading wrappers for those sections
+    doc.querySelectorAll(".mw-heading").forEach(wrapper => {
+      const h = wrapper.querySelector("h2, h3");
+      if (!h) return;
+      const headingId = wrapper.querySelector("[id]");
+      const id = headingId ? headingId.id : "";
+      if (sectionHeadings.some(s => id === s || id.replace(/_/g, " ") === s.replace(/_/g, " "))) {
+        // Remove everything after this wrapper until the next mw-heading of same or higher level
+        let el = wrapper.nextElementSibling;
+        const isH2 = !!wrapper.querySelector("h2");
+        while (el) {
+          const next = el.nextElementSibling;
+          if (el.classList && el.classList.contains("mw-heading")) {
+            const innerH = el.querySelector("h2, h3");
+            if (innerH && (innerH.tagName === "H2" || (isH2 && innerH.tagName === "H2"))) break;
+            if (isH2) { el.remove(); el = next; continue; }
+            break;
+          }
+          el.remove();
+          el = next;
+        }
+        wrapper.remove();
+      }
+    });
+
+    // Fix image URLs (protocol-relative)
+    doc.querySelectorAll("img").forEach(img => {
+      const src = img.getAttribute("src");
+      if (src && src.startsWith("//")) {
+        img.setAttribute("src", "https:" + src);
+      }
+      const srcset = img.getAttribute("srcset");
+      if (srcset) {
+        img.setAttribute("srcset", srcset.replace(/\/\//g, "https://"));
+      }
+      // Remove hardcoded dimensions
+      img.removeAttribute("width");
+      img.removeAttribute("height");
+    });
+
+    // Replace <a> tags with <span> to disable navigation
+    doc.querySelectorAll("a").forEach(a => {
+      const span = doc.createElement("span");
+      span.innerHTML = a.innerHTML;
+      // Copy class if any
+      if (a.className) span.className = a.className;
+      a.replaceWith(span);
+    });
+
+    // Remove float positioning from thumbnails
+    doc.querySelectorAll(".thumb, .tright, .tleft, .tmulti").forEach(el => {
+      el.style.cssText = "";
+    });
+    doc.querySelectorAll(".thumbinner").forEach(el => {
+      el.style.cssText = "";
+    });
+
+    return doc.body.innerHTML;
+  }
+
+  function renderArticle(info, articleHtml) {
+    // Derive county name without state abbreviation
+    const countyName = info.fullName.replace(/,\s*[A-Z]{2}$/, "").replace(/,\s*[A-Za-z\s]+$/, "");
+    // Derive state name from fullName
+    const stateAbbr = info.fullName.match(/,\s*(.+)$/);
+    const stateName = stateAbbr ? stateAbbr[1].trim() : "";
+
+    const peakPop = info.peakPop ? info.peakPop.toLocaleString() : "N/A";
+    const pop2020 = info.pop2020 ? info.pop2020.toLocaleString() : "N/A";
+
+    return `
+      <h1 class="article-headline">${countyName}</h1>
+      <div class="article-subtitle">${stateName}</div>
+      <hr class="article-rule">
+      <div class="article-meta">
+        Peak population: <strong>${peakPop}</strong> (${info.peakDecade}s)<br>
+        Population in 2020: <strong>${pop2020}</strong>
+      </div>
+      <div class="article-body">${articleHtml}</div>
+      <div class="wiki-attribution">Source: <a href="${info.wikiUrl}" target="_blank" rel="noopener">Wikipedia</a></div>
+    `;
+  }
+
+  async function onClick(event, d) {
+    const info = peaks[d.id];
+    if (!info) return;
+
+    // Abort any in-flight request
+    if (currentAbort) currentAbort.abort();
+    currentAbort = new AbortController();
+    const signal = currentAbort.signal;
+
+    wikiTitle.textContent = info.fullName;
+    wikiContent.innerHTML = "Loading article\u2026";
+    wikiContent.classList.add("loading");
+    wikiPanel.classList.add("open");
+
+    try {
+      const rawHtml = await fetchWikiContent(info.wikiUrl, signal);
+      if (signal.aborted) return;
+      const cleaned = cleanWikiHtml(rawHtml);
+      wikiContent.classList.remove("loading");
+      wikiContent.innerHTML = renderArticle(info, cleaned);
+    } catch (err) {
+      if (err.name === "AbortError") return;
+      wikiContent.classList.remove("loading");
+      wikiContent.innerHTML = `
+        <p style="padding: 20px; color: #999; font-style: italic;">
+          Could not load article.
+          <a href="${info.wikiUrl}" target="_blank" rel="noopener" style="pointer-events: auto; color: #2171b5;">
+            View on Wikipedia &rarr;
+          </a>
+        </p>`;
+    }
+  }
+
+  function closePanel() {
     wikiPanel.classList.remove("open");
-    wikiIframe.src = "";
-  });
+    if (currentAbort) { currentAbort.abort(); currentAbort = null; }
+    wikiContent.innerHTML = "";
+    wikiContent.classList.remove("loading");
+  }
+
+  wikiClose.addEventListener("click", closePanel);
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && wikiPanel.classList.contains("open")) {
-      wikiPanel.classList.remove("open");
-      wikiIframe.src = "";
+      closePanel();
     }
   });
 
