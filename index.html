@@ -501,6 +501,13 @@
     wikiIframe.src = "";
   });
 
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && wikiPanel.classList.contains("open")) {
+      wikiPanel.classList.remove("open");
+      wikiIframe.src = "";
+    }
+  });
+
   // Build legend
   const legendEntries = [
     [2020, "2020"], [2010, "2010"], [2000, "2000"],
