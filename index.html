@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peak Population Decade — U.S. Counties</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #fff;
+    color: #333;
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Masthead rule ── */
+  header {
+    text-align: center;
+    padding: 28px 20px 20px;
+    flex-shrink: 0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  header .kicker {
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  header h1 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 34px;
+    font-weight: 900;
+    color: #121212;
+    letter-spacing: -0.3px;
+    line-height: 1.15;
+    white-space: nowrap;
+    margin: 0 auto;
+  }
+
+  header .deck {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #555;
+    margin-top: 8px;
+    line-height: 1.45;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  header .byline {
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #888;
+    margin-top: 12px;
+    letter-spacing: 0.3px;
+  }
+
+  header .byline a {
+    color: #333;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  header .byline a:hover {
+    text-decoration: underline;
+  }
+
+  /* ── Main layout ── */
+  #main {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    background: #f7f7f5;
+  }
+
+  #map-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 0 20px 0 30px;
+  }
+
+  #map-container svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .neighbor-land {
+    fill: #dcdcd8;
+    stroke: #bbb;
+    stroke-width: 0.5;
+    pointer-events: none;
+  }
+
+  .ocean-bg {
+    fill: #f7f7f5;
+  }
+
+
+  .inset-label {
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 9px;
+    fill: #999;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+  }
+
+  .county {
+    stroke: rgba(255,255,255,0.4);
+    stroke-width: 0.25;
+    cursor: pointer;
+    transition: stroke 0.08s, stroke-width 0.08s;
+  }
+
+  .county:hover {
+    stroke: #121212;
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .state-border {
+    fill: none;
+    stroke: rgba(255,255,255,0.65);
+    stroke-width: 0.7;
+    pointer-events: none;
+  }
+
+  /* ── Tooltip ── */
+  #tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.55;
+    display: none;
+    z-index: 100;
+    max-width: 260px;
+  }
+
+  #tooltip .tt-name {
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 700;
+    color: #121212;
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+
+  #tooltip .tt-detail {
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    color: #555;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  #tooltip .tt-detail strong {
+    color: #222;
+    font-weight: 600;
+  }
+
+  /* ── Legend ── */
+  #legend {
+    position: absolute;
+    bottom: 20px;
+    right: 28px;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid #ddd;
+    padding: 12px 16px 10px;
+    z-index: 50;
+  }
+
+  #legend h3 {
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .legend-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    color: #555;
+    font-weight: 400;
+  }
+
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  /* ── Wiki panel ── */
+  #wiki-panel {
+    width: 0;
+    overflow: hidden;
+    background: #fff;
+    border-left: 1px solid #ddd;
+    transition: width 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  #wiki-panel.open {
+    width: 38%;
+  }
+
+  #wiki-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e5e5;
+    flex-shrink: 0;
+    background: #fff;
+  }
+
+  #wiki-header span {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #121212;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #wiki-close {
+    background: none;
+    border: 1px solid #ddd;
+    color: #666;
+    font-size: 16px;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 12px;
+    transition: all 0.15s;
+  }
+
+  #wiki-close:hover { border-color: #999; color: #121212; }
+
+  #wiki-iframe {
+    flex: 1;
+    border: none;
+    background: #fff;
+  }
+
+  /* ── Loading ── */
+  #loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 15px;
+    font-style: italic;
+  }
+
+  /* ── Source line ── */
+  #source-line {
+    font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    color: #aaa;
+    position: absolute;
+    bottom: 8px;
+    left: 16px;
+    letter-spacing: 0.2px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Interactive Graphic</div>
+  <h1>The Decade Every U.S. County Peaked in Population</h1>
+  <p class="deck">Using census data from 1900 to 2020, every county is colored by the decade it reached its highest recorded population.</p>
+  <p class="byline">By <a href="https://x.com/audrlo" target="_blank" rel="noopener">Audrey Lo</a> · Feb. 22, 2026</p>
+</header>
+
+<div id="main">
+  <div id="map-container">
+    <div id="loading">Loading map data&hellip;</div>
+    <div id="source-line">Source: U.S. Census Bureau, decennial census 1900&ndash;2020 &middot; N.B.E.R.</div>
+  </div>
+
+  <div id="wiki-panel">
+    <div id="wiki-header">
+      <span id="wiki-title"></span>
+      <button id="wiki-close" aria-label="Close">&times;</button>
+    </div>
+    <iframe id="wiki-iframe" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+  </div>
+</div>
+
+<div id="tooltip">
+  <div class="tt-name"></div>
+  <div class="tt-detail"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://unpkg.com/topojson-client@3"></script>
+<script>
+(async function() {
+  const colorMap = {
+    2020: "#08306b",
+    2010: "#2171b5",
+    2000: "#4292c6",
+    1990: "#41ab5d",
+    1980: "#74c476",
+    1970: "#c7e9c0",
+    1960: "#ffffb2",
+    1950: "#fed976",
+    1940: "#feb24c",
+    1930: "#fd8d3c",
+    1920: "#fc4e2a",
+    1910: "#e31a1c",
+    1900: "#b10026",
+  };
+  const defaultColor = "#800026"; // ≤1890
+
+  function getColor(decade) {
+    return colorMap[decade] || defaultColor;
+  }
+
+  // ViewBox centered on the US with padding for neighbors
+  const vbX = -25, vbY = 10, vbW = 1050, vbH = 630;
+
+  // Load data in parallel (including world countries for neighbor outlines)
+  const [us, peaks, world] = await Promise.all([
+    d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json"),
+    d3.json("data/county_peaks.json"),
+    d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"),
+  ]);
+
+  document.getElementById("loading").remove();
+
+  const counties = topojson.feature(us, us.objects.counties);
+  const stateBorders = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
+
+  // Projection matching the pre-projected US atlas (lower 48 portion)
+  const neighborProjection = d3.geoAlbers()
+    .scale(1300)
+    .translate([487.5, 305])
+    .preclip(stream => stream);
+  const neighborPath = d3.geoPath(neighborProjection);
+
+  // Extract Canada and Mexico for neighbor land fill
+  const worldCountries = topojson.feature(world, world.objects.countries);
+  const neighborIds = new Set([
+    "124",  // Canada
+    "484",  // Mexico
+  ]);
+  const neighbors = worldCountries.features.filter(
+    d => neighborIds.has(d.id)
+  );
+
+  // Build SVG
+  const container = document.getElementById("map-container");
+  const svg = d3.select(container)
+    .append("svg")
+    .attr("viewBox", `${vbX} ${vbY} ${vbW} ${vbH}`)
+    .attr("preserveAspectRatio", "xMidYMid meet");
+
+  // Zoomable group wrapping all map layers
+  const g = svg.append("g");
+
+  // Ocean background
+  g.append("rect")
+    .attr("class", "ocean-bg")
+    .attr("x", vbX - 1000)
+    .attr("y", vbY - 1000)
+    .attr("width", vbW + 2000)
+    .attr("height", vbH + 2000);
+
+  const usPath = d3.geoPath(); // null projection for pre-projected US data
+
+  // Neighbor country land masses
+  g.append("g")
+    .selectAll("path")
+    .data(neighbors)
+    .join("path")
+    .attr("class", "neighbor-land")
+    .attr("d", neighborPath);
+
+  // Split counties: lower 48 vs Alaska (02) vs Hawaii (15)
+  const lower48 = counties.features.filter(d => !d.id.startsWith("02") && !d.id.startsWith("15"));
+  const alaska = counties.features.filter(d => d.id.startsWith("02"));
+  const hawaii = counties.features.filter(d => d.id.startsWith("15"));
+
+  // Lower-48 county paths
+  g.append("g")
+    .selectAll("path")
+    .data(lower48)
+    .join("path")
+    .attr("class", "county")
+    .attr("d", usPath)
+    .attr("fill", d => {
+      const info = peaks[d.id];
+      return info ? getColor(info.peakDecade) : "#e0e0e0";
+    })
+    .on("mouseenter", onMouseEnter)
+    .on("mousemove", onMouseMove)
+    .on("mouseleave", onMouseLeave)
+    .on("click", onClick);
+
+  // State borders (lower 48 only — mesh includes all, drawn first)
+  g.append("path")
+    .datum(stateBorders)
+    .attr("class", "state-border")
+    .attr("d", usPath);
+
+
+  // Disable all zoom/scroll/drag on the map
+  svg.on("wheel", e => e.preventDefault())
+     .on("dblclick.zoom", null);
+
+  // Tooltip
+  const tooltip = document.getElementById("tooltip");
+  const ttName = tooltip.querySelector(".tt-name");
+  const ttDetail = tooltip.querySelector(".tt-detail");
+
+  function onMouseEnter(event, d) {
+    const info = peaks[d.id];
+    if (!info) return;
+    ttName.textContent = info.fullName;
+    ttDetail.innerHTML =
+      `Population in ${info.peakDecade}: <strong>${info.peakPop.toLocaleString()}</strong><br>` +
+      `Population in 2020: <strong>${info.pop2020.toLocaleString()}</strong>`;
+    tooltip.style.display = "block";
+    positionTooltip(event);
+  }
+
+  function onMouseMove(event) {
+    positionTooltip(event);
+  }
+
+  function onMouseLeave() {
+    tooltip.style.display = "none";
+  }
+
+  function positionTooltip(event) {
+    let x = event.clientX + 16;
+    let y = event.clientY + 16;
+    if (x + 270 > window.innerWidth) x = event.clientX - 270;
+    if (y + 90 > window.innerHeight) y = event.clientY - 90;
+    tooltip.style.left = x + "px";
+    tooltip.style.top = y + "px";
+  }
+
+  // Wiki panel
+  const wikiPanel = document.getElementById("wiki-panel");
+  const wikiTitle = document.getElementById("wiki-title");
+  const wikiIframe = document.getElementById("wiki-iframe");
+  const wikiClose = document.getElementById("wiki-close");
+
+  function onClick(event, d) {
+    const info = peaks[d.id];
+    if (!info) return;
+    wikiTitle.textContent = info.fullName;
+    wikiIframe.src = info.wikiUrl;
+    wikiPanel.classList.add("open");
+  }
+
+  wikiClose.addEventListener("click", () => {
+    wikiPanel.classList.remove("open");
+    wikiIframe.src = "";
+  });
+
+  // Build legend
+  const legendEntries = [
+    [2020, "2020"], [2010, "2010"], [2000, "2000"],
+    [1990, "1990"], [1980, "1980"], [1970, "1970"],
+    [1960, "1960"], [1950, "1950"], [1940, "1940"],
+    [1930, "1930"], [1920, "1920"], [1910, "1910"],
+    [1900, "1900"], [null, "Before 1900"],
+  ];
+
+  const legend = document.createElement("div");
+  legend.id = "legend";
+  legend.innerHTML = "<h3>Peak Decade</h3>";
+  legendEntries.forEach(([decade, label]) => {
+    const row = document.createElement("div");
+    row.className = "legend-row";
+    const swatch = document.createElement("div");
+    swatch.className = "legend-swatch";
+    swatch.style.background = decade !== null ? getColor(decade) : defaultColor;
+    const text = document.createElement("span");
+    text.textContent = label;
+    row.appendChild(swatch);
+    row.appendChild(text);
+    legend.appendChild(row);
+  });
+  container.appendChild(legend);
+})();
+</script>
+</body>
+</html>
